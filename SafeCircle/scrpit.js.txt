@@ -1,0 +1,71 @@
+const sosBtn = document.getElementById("sosBtn");
+const recordBtn = document.getElementById("recordBtn");
+const fakeCallBtn = document.getElementById("fakeCallBtn");
+const locationDisplay = document.getElementById("locationDisplay");
+const audioPlayback = document.getElementById("audioPlayback");
+const fakeCallScreen = document.getElementById("fakeCallScreen");
+
+let mediaRecorder;
+let audioChunks = [];
+
+/* ================= SOS BUTTON ================= */
+sosBtn.addEventListener("click", () => {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(position => {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+            const mapsLink = `https://www.google.com/maps?q=${lat},${lon}`;
+
+            locationDisplay.innerHTML = `
+                <p><strong>Location Sent Successfully!</strong></p>
+                <p>Latitude: ${lat}</p>
+                <p>Longitude: ${lon}</p>
+                <a href="${mapsLink}" target="_blank" style="color: yellow;">
+                    Open in Google Maps
+                </a>
+            `;
+
+            alert(" SOS Alert Sent with Live Location!");
+        },
+        () => {
+            alert("Unable to retrieve location.");
+        });
+    } else {
+        alert("Geolocation not supported in this browser.");
+    }
+});
+
+/* ================= RECORD AUDIO ================= */
+recordBtn.addEventListener("click", async () => {
+    if (!mediaRecorder) {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+
+        mediaRecorder.ondataavailable = e => {
+            audioChunks.push(e.data);
+        };
+
+        mediaRecorder.onstop = () => {
+            const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
+            const audioUrl = URL.createObjectURL(audioBlob);
+            audioPlayback.src = audioUrl;
+            audioChunks = [];
+        };
+
+        mediaRecorder.start();
+        recordBtn.textContent = "⏹ Stop Recording";
+    } else {
+        mediaRecorder.stop();
+        mediaRecorder = null;
+        recordBtn.textContent = "🎤 Record Evidence";
+    }
+});
+
+/* ================= FAKE CALL ================= */
+fakeCallBtn.addEventListener("click", () => {
+    fakeCallScreen.classList.remove("hidden");
+});
+
+function endCall() {
+    fakeCallScreen.classList.add("hidden");
+}

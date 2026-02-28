@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SafeCircle - Smart Emergency App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <h1> SafeCircle</h1>
+    <p class="subtitle">Your Smart Emergency Companion</p>
+
+    <button id="sosBtn" class="danger"> Send SOS</button>
+    <button id="recordBtn" class="warning"> Record Evidence</button>
+    <button id="fakeCallBtn" class="safe"> Fake Call</button>
+
+    <div id="locationDisplay"></div>
+    <audio id="audioPlayback" controls></audio>
+</div>
+
+<!-- Fake Call Screen -->
+<div id="fakeCallScreen" class="hidden">
+    <div class="callBox">
+        <h2>Incoming Call...</h2>
+        <p>Mom Calling </p>
+        <button onclick="endCall()">End Call</button>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
